@@ -1,0 +1,6 @@
+Write-Host Installing PyInstaller...
+pip install pyinstaller
+Write-Host Building...
+pyinstaller --noconfirm --onefile --windowed --name TaxExtractor app.py
+Write-Host Done! Check dist folder.
+pause
