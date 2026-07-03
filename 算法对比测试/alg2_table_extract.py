@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """算法2：基于pdfplumber表格提取功能的PDF解析"""
 import os, sys, json, time
 import pdfplumber

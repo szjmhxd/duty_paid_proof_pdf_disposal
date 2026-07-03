@@ -1,4 +1,4 @@
-﻿# PDF数据文件
+# PDF数据文件
 *.pdf
 PDF数据目录/
 *_补缴/
@@ -30,6 +30,13 @@ dist/
 .idea/
 *.swp
 *.swo
+
+# 测试拉取目录
+测试拉取/
+
+# 临时脚本
+check_bom.py
+fix_bom.py
 
 # 系统文件
 Thumbs.db
