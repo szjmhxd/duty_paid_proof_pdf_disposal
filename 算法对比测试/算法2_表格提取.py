@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+﻿﻿# -*- coding: utf-8 -*-
 """
 算法2：基于表格提取的方式
 使用pdfplumber的extract_tables()方法提取PDF中的表格数据

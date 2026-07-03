@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+﻿﻿# -*- coding: utf-8 -*-
 """算法4：基于PyMuPDF(fitz)进行PDF结构解析"""
 import os, sys, json, time
 import fitz  # PyMuPDF
