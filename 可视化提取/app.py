@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """
 完税证明PDF批量提取工具 - 图形界面版
 功能：
@@ -357,8 +357,17 @@ class TaxExtractorApp:
         frame_out = ttk.Frame(self.root, padding=(10, 5, 10, 0))
         frame_out.pack(fill=tk.X)
         ttk.Label(frame_out, text='输出文件夹：').pack(side=tk.LEFT)
-        desktop_path = os.path.join(os.path.expanduser('~'), 'Desktop')
-        self.out_var = tk.StringVar(value=desktop_path)
+        # 多重路径检测桌面位置，兼容不同Windows配置
+        _home = os.path.expanduser('~')
+        _desktop = os.path.join(_home, 'Desktop')
+        if not os.path.isdir(_desktop):
+            # 尝试通过环境变量获取（Windows兼容）
+            _userprofile = os.environ.get('USERPROFILE', '')
+            if _userprofile:
+                _desktop = os.path.join(_userprofile, 'Desktop')
+        if not os.path.isdir(_desktop):
+            _desktop = _home  # 最终fallback到用户主目录
+        self.out_var = tk.StringVar(value=_desktop)
         self.out_entry = ttk.Entry(frame_out, textvariable=self.out_var, width=60)
         self.out_entry.pack(side=tk.LEFT, padx=(5, 5), fill=tk.X, expand=True)
         ttk.Button(frame_out, text='浏览...', command=self._browse_output).pack(side=tk.LEFT)
@@ -556,13 +565,29 @@ class TaxExtractorApp:
             self._log('生成输出文件...')
 
             excel_path = os.path.join(out_path, filename)
-            generate_excel(all_records, excel_path)
-            self._log(f'Excel: {excel_path}')
+            try:
+                generate_excel(all_records, excel_path)
+                self._log(f'Excel: {excel_path}')
+            except PermissionError:
+                self._log(f'写入失败: 无权限写入 {excel_path}')
+                self._log('请检查输出文件夹是否有写入权限，或更换输出文件夹')
+                raise
+            except Exception as e:
+                self._log(f'写入Excel失败: {e}')
+                raise
 
             sql_filename = filename.replace('.xlsx', '.sql')
             sql_path = os.path.join(out_path, sql_filename)
-            generate_sql(all_records, sql_path)
-            self._log(f'SQL:   {sql_path}')
+            try:
+                generate_sql(all_records, sql_path)
+                self._log(f'SQL:   {sql_path}')
+            except PermissionError:
+                self._log(f'写入失败: 无权限写入 {sql_path}')
+                self._log('请检查输出文件夹是否有写入权限，或更换输出文件夹')
+                raise
+            except Exception as e:
+                self._log(f'写入SQL失败: {e}')
+                raise
 
             total_elapsed = time.time() - start_time
 
